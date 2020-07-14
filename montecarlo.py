@@ -38,7 +38,6 @@ class MonteCarlo:
       walk.append((s,action))
       if game.isTerminal():
         break
-    assert(G in [0,-1,1])
     for s, action in walk:
       self.q[s][action] = self.q[s][action] + self.alpha(s, action) * (G - self.q[s][action])
 
@@ -59,7 +58,7 @@ class MonteCarlo:
           s = (d, p)
           action = self.greedy_action(s)
           q = self.q[s][action]
-          f.write("%s %s %s\n" %(d,p,q))
+          f.write("%s %s %4f\n" %(d,p,q))
 
   def epsilon_greedy_action(self, s):
     if random.random() <= self.epsilon(s):
@@ -68,7 +67,6 @@ class MonteCarlo:
       return self.greedy_action(s)
 
   def __init__(self):
-    self.episodeCount = 10000
     # Our value function
     # the keys are tuples of (dealerScore, playerScore, action) = R
     # and the value is another dict for looking up the action.
@@ -114,9 +112,6 @@ class MonteCarlo:
 
 if __name__ == "__main__":
   m = MonteCarlo()
-  for i in range(1,50000):
+  for i in range(1,100000):
     m.run()
   m.plot_v_star()
-
-  for i in range(1,11):
-    print(m.q[(i, 11)])

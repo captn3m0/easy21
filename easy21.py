@@ -19,43 +19,31 @@ class Card:
     self.color = color
     self.value = value
 
-  def black(self):
-    return self.color == Color.BLACK
-
-  def red(self):
-    return self.color == Color.RED
-
+  """
+  Card scores can be positive or negative
+  depending on the color
+  """
+  def score(self):
+    if self.color == Color.RED:
+      return -self.value
+    else:
+      return self.value
 class Easy21:
   def state(self):
-    return (self.dealerScore(), self.playerScore())
-
-  def score(self, hand):
-    score = 0
-    for card in hand:
-      if card.black():
-        score += card.value
-      elif card.red():
-        score -= card.value
-      else:
-        raise Exception("Invalid card color")
-    return score
+    return (self.dealer, self.player)
 
   def dealerScore(self):
-    return self.score(self.dealer)
+    return self.dealer
 
   def playerScore(self):
-    return self.score(self.player)
+    return self.player
 
   def __init__(self):
     self.terminal = False
     self.stick = False
-    self.dealer = [self.drawBlack()]
-    self.player = [self.drawBlack()]
-
-  """ Used for the starting player and dealer draws """
-  def drawBlack(self):
-    v = random.randint(1,10)
-    return Card(Color.BLACK, v)
+    # Draw 2 black cards for dealer and player
+    self.dealer = random.randint(1,10)
+    self.player = random.randint(1,10)
 
   """ This just implements our probability distribution for card draws """
   def drawCard(self):
@@ -68,20 +56,22 @@ class Easy21:
 
   def step(self, action):
     if action == Action.HIT:
-      self.player.append(self.drawCard())
-      if self.playerScore() > 21 or self.playerScore() < 1:
+      # Draw a new card
+      c = self.drawCard()
+      self.player += c.score()
+      if self.player > 21 or self.player < 1:
         self.terminal = True
         return (self, -1)
       return (self, 0)
     elif action == Action.STICK:
-      while self.dealerScore() < 17:
-        self.dealer.append(self.drawCard())
+      while self.dealer < 17:
+        self.dealer += self.drawCard().score()
       self.terminal = True
-      if self.dealerScore() < 1 or self.dealerScore() > 21:
+      if self.dealer < 1 or self.dealer > 21:
         return (self, 1)
-      elif self.dealerScore() > self.playerScore():
+      elif self.dealer > self.player:
         return (self, -1)
-      elif self.dealerScore() < self.playerScore():
+      elif self.dealer < self.player:
         return (self, 1)
       else:
         return (self, 0)
