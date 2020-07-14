@@ -26,6 +26,8 @@ class Card:
     return self.color == Color.RED
 
 class Easy21:
+  def state(self):
+    return (self.dealerScore(), self.playerScore())
 
   def score(self, hand):
     score = 0
@@ -45,6 +47,7 @@ class Easy21:
     return self.score(self.player)
 
   def __init__(self):
+    self.terminal = False
     self.stick = False
     self.dealer = [self.drawBlack()]
     self.player = [self.drawBlack()]
@@ -60,18 +63,23 @@ class Easy21:
     c = random.choice([Color.RED, Color.BLACK, Color.BLACK])
     return Card(c, v)
 
+  def isTerminal(self):
+    return (self.terminal == True)
+
   def step(self, action):
     if action == Action.HIT:
       self.player.append(self.drawCard())
       if self.playerScore() > 21 or self.playerScore() < 1:
+        self.terminal = True
         return (self, -1)
-      return (self, None)
+      return (self, 0)
     elif action == Action.STICK:
       while self.dealerScore() < 17:
         self.dealer.append(self.drawCard())
+      self.terminal = True
       if self.dealerScore() < 1 or self.dealerScore() > 21:
-        return (self, -1)
-      if self.dealerScore() > self.playerScore():
+        return (self, 1)
+      elif self.dealerScore() > self.playerScore():
         return (self, -1)
       elif self.dealerScore() < self.playerScore():
         return (self, 1)
