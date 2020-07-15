@@ -73,18 +73,16 @@ if __name__ == "__main__":
     s = Sarsa(_l)
     c1 = []
     c2 = []
-    for j in range(1,10001):
+    for j in range(1,1001):
       s.run()
       if j % 100 == 0:
         c1.append(j)
         e = s.mean_squared_error(m.q)
         c2.append(e)
-        if j % 1000 == 0:
+        if j % 100 == 0:
           print("Error = %2f" % e)
     title = "Sarsa(%s)" % _l
-    print(len(c2))
-    print(len(c1))
     v = graph.data.values(title=title, x=c1, y=c2)
     plots.append(v)
-  g.plot(plots, [graph.style.line([style.linestyle.solid, color.gradient.Rainbow])])
+  g.plot(plots, [graph.style.line([color.gradient.Rainbow])])
   g.writeSVGfile("sarsa-errors")
