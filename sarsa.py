@@ -49,8 +49,8 @@ class Sarsa(MonteCarlo):
     q1 = self.q
     e = 0
     for s in q1:
-      e+= pow(q1[s][Action.HIT] - q2[s][Action.HIT],2 )
-      e+= pow(q1[s][Action.STICK] - q2[s][Action.STICK],2)
+      e+= pow(q1[s][Action.HIT] - q2[s][Action.HIT], 2)
+      e+= pow(q1[s][Action.STICK] - q2[s][Action.STICK], 2)
 
     return e
 
@@ -61,7 +61,7 @@ class Sarsa(MonteCarlo):
         self.E[s][a] = Sarsa.GAMMA * self._lambda * self.E[s][a]
 
 if __name__ == "__main__":
-  g = graph.graphxy(width=100, x=graph.axis.linear(min=1, max=1000), y=graph.axis.linear(), key=graph.key.key(pos="br", dist=0.1))
+  g = graph.graphxy(width=30, x=graph.axis.linear(min=100,max=1000), y=graph.axis.linear(), key=graph.key.key(pos="bl"))
   plots = []
   """ Re-calculate V* """
   m = MonteCarlo()
@@ -82,8 +82,9 @@ if __name__ == "__main__":
         if j % 1000 == 0:
           print("Error = %2f" % e)
     title = "Sarsa(%s)" % _l
+    print(len(c2))
+    print(len(c1))
     v = graph.data.values(title=title, x=c1, y=c2)
     plots.append(v)
-    # styles.append(graph.style.line())
   g.plot(plots, [graph.style.line([style.linestyle.solid, color.gradient.Rainbow])])
-  g.writeSVGfile("error")
+  g.writeSVGfile("sarsa-errors")
