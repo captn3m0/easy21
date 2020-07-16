@@ -14,7 +14,13 @@ A textual representation of V* is in [`vstar.txt`](vstar.txt)
 
 ![mean squared error for various Sarsa implementations](sarsa-errors.svg)
 
+#### mean squared error for various Sarsa implementations using function approximators
+
+![mean squared error for various Sarsa implementations with function approximation](sarsa-lfa-errors.svg)
+
 Unlike every other implementation on GitHub, this _does not use numpy or matplotlib_. Everything uses Python primitives (so you won't see `np.add`), and the only external module used is `pyx` for the charting (which I found easier to use).
+
+
 
 ## License
 

@@ -1,15 +1,27 @@
-from features import FeatureExtractor
-from easy21 import Action
+from easy21 import Easy21, Color,Action
 
-def test_feature_extractor():
-  f = FeatureExtractor((10,12), Action.HIT)
-  f = f.features()
-  assert(f[18:] == [0] * 18)
-  assert(f[0:12] == [0] * 12)
-  assert(f[12:18] == [0,0,1,1,0,0])
+def test_easy21_init_game():
+  g = Easy21()
+  assert(g.player<= 10)
+  assert(g.player>=1)
+  assert(g.dealer>=1)
+  assert(g.dealer>=1)
+  for i in range(1,1000):
+    c = g.drawCard()
+    assert(c.value < 11)
+    assert(c.value > 0)
 
-def test_extractor_at_extreme():
-  f = FeatureExtractor((10,21), Action.STICK)
-  f = f.features()
-  assert(f[0:35] == [0] * 35)
-  assert(f[35] == 1)
+def test_losing():
+  g = Easy21()
+  r = None
+  while True:
+    x,r = g.step(Action.HIT)
+    if r == -1:
+      break
+  assert(r == -1)
+
+def test_losing_by_early_stick():
+  g = Easy21()
+  r = None
+  g,r = g.step(Action.STICK)
+  assert(r == -1)
